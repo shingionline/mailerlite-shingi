@@ -10,18 +10,18 @@ class ContactController extends Controller
 {
     public function get($id)
     {
-        return Contact::where('shipper_id', $id)->orderBy('id', 'DESC')->get();
+        return Contact::where('subscriber_id', $id)->orderBy('id', 'DESC')->get();
     }
 
     public function make_primary(Request $request): JsonResponse
     {
         $data = $request->all();
 
-        $shipper_id = $data['shipper_id'];
+        $subscriber_id = $data['subscriber_id'];
         $contact_id = $data['contact_id'];
 
         // set all contacts to not primary
-        Contact::where('shipper_id', $shipper_id)->update(['primary' => 0]);
+        Contact::where('subscriber_id', $subscriber_id)->update(['primary' => 0]);
 
         // make the selected contact primary
         Contact::where('id', $contact_id)->update(['primary' => 1]);
@@ -43,18 +43,18 @@ class ContactController extends Controller
 
         $data = $request->all();
 
-        $shipper_id = $data['shipper_id'];
+        $subscriber_id = $data['subscriber_id'];
         $name = $data['contact']['name'];
         $phone = $data['contact']['phone'];
 
         // check if there's a primary contact
-        $check = Contact::where('shipper_id', $shipper_id)->where('primary', 1)->first();
+        $check = Contact::where('subscriber_id', $subscriber_id)->where('primary', 1)->first();
 
         // if there is no primary contact, set this contact to primary
         $primary = ($check) ? 0 : 1;
 
         $contact = new Contact();
-        $contact->shipper_id = $shipper_id;
+        $contact->subscriber_id = $subscriber_id;
         $contact->name = $name;
         $contact->phone = $phone;
         $contact->primary = $primary;

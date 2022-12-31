@@ -1,6 +1,6 @@
 <template>
   <b-modal id="bv-modal-show-contacts" hide-footer>
-    <template #modal-title><b>Contacts for {{ JSON.parse(selected_shipper).name }}</b></template>
+    <template #modal-title><b>Contacts for {{ JSON.parse(selected_subscriber).name }}</b></template>
 
     <!-- Add contact screen -->
     <div v-if="add_contact">
@@ -100,7 +100,7 @@
 
 <script>
 export default {
-  props: ["selected_shipper"],
+  props: ["selected_subscriber"],
 
   data() {
     return {
@@ -118,7 +118,7 @@ export default {
     },
 
     saveContact() {
-      let selected_shipper = JSON.parse(this.selected_shipper);
+      let selected_subscriber = JSON.parse(this.selected_subscriber);
 
       if (!this.new_contact.name) {
         this.customAlert("Please enter contact name");
@@ -133,14 +133,14 @@ export default {
         axios
           .post("/contacts/new", {
             contact: this.new_contact,
-            shipper_id: selected_shipper.id,
+            subscriber_id: selected_subscriber.id,
           })
           .then((response) => {
             console.log(response.data);
-            this.getContacts(selected_shipper.id);
+            this.getContacts(selected_subscriber.id);
             this.add_contact = false;
             if (response.data.contact.primary === 1) {
-              this.$emit("update-shippers");
+              this.$emit("update-subscribers");
             }
             this.saving_contact = false;
           })
@@ -155,17 +155,17 @@ export default {
     },
 
     makePrimary(contact_id) {
-      let selected_shipper = JSON.parse(this.selected_shipper);
+      let selected_subscriber = JSON.parse(this.selected_subscriber);
 
       axios
         .post("/contacts/make-primary", {
           contact_id: contact_id,
-          shipper_id: selected_shipper.id,
+          subscriber_id: selected_subscriber.id,
         })
         .then((response) => {
           console.log(response.data);
-          this.getContacts(selected_shipper.id);
-          this.$emit("update-shippers");
+          this.getContacts(selected_subscriber.id);
+          this.$emit("update-subscribers");
         })
         .catch(function (err) {
           console.log(err);
@@ -188,13 +188,13 @@ export default {
     },
 
     deleteContact(contact_id) {
-      let selected_shipper = JSON.parse(this.selected_shipper);
+      let selected_subscriber = JSON.parse(this.selected_subscriber);
 
       axios
         .delete(`/contacts/delete/${contact_id}`)
         .then((response) => {
           console.log(response.data);
-          this.getContacts(selected_shipper.id);
+          this.getContacts(selected_subscriber.id);
         })
         .catch(function (err) {
           console.log(err);
@@ -202,9 +202,9 @@ export default {
         });
     },
 
-    getContacts(shipper_id) {
+    getContacts(subscriber_id) {
       axios
-        .get(`/contacts/get/${shipper_id}`)
+        .get(`/contacts/get/${subscriber_id}`)
         .then((response) => {
           this.contacts = response.data;
         })

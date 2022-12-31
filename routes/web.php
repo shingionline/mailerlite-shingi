@@ -3,7 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\SiteController;
 use App\Http\Controllers\ContactController;
-use App\Http\Controllers\ShipperController;
+use App\Http\Controllers\SubscriberController;
 
 /*
 |--------------------------------------------------------------------------
@@ -18,12 +18,12 @@ use App\Http\Controllers\ShipperController;
 
 Route::get('/', [SiteController::class, 'index']);
 
-Route::prefix('/shippers')->group(function () {
-    Route::get('/get-all', [ShipperController::class, 'get_all']);
-    Route::get('/get/{id}', [ShipperController::class, 'get_single']);
-    Route::post('/new', [ShipperController::class, 'new']);
-    Route::post('/update', [ShipperController::class, 'update']);
-    Route::delete('/delete/{id}', [ShipperController::class, 'delete']);
+Route::prefix('/subscribers')->group(function () {
+    Route::get('/get-all', [SubscriberController::class, 'get_all']);
+    Route::get('/get/{id}', [SubscriberController::class, 'get_single']);
+    Route::post('/new', [SubscriberController::class, 'new']);
+    Route::post('/update', [SubscriberController::class, 'update']);
+    Route::delete('/delete/{id}', [SubscriberController::class, 'delete']);
 });
 
 Route::prefix('/contacts')->group(function () {
