@@ -23,7 +23,7 @@ class SubscriberController extends Controller
 
             // check if field value exists for this subscriber
             $check = FieldValue::where('subscriber_id', $subscriber->id)
-                               ->where('field_id', $field->id)->first();
+                ->where('field_id', $field->id)->first();
 
             $value = (!empty($check)) ? $check->value : null;
             $fieldValueId = (!empty($check)) ? $check->id : null;
@@ -44,7 +44,6 @@ class SubscriberController extends Controller
         $subscriber->field_values = $fieldValues;
 
         return $subscriber;
-
     }
 
     public function get_all()
@@ -106,26 +105,26 @@ class SubscriberController extends Controller
             $title = $data['field']['title'];
             $value = $data['value'];
 
-                // get field id
-                $field = Field::where('title', $title)->first();
+            // get field id
+            $field = Field::where('title', $title)->first();
 
-                // check if field value exists for this subscriber
-                $check = FieldValue::where('subscriber_id', $subscriber->id)
-                                ->where('field_id', $field->id)->first();
-            
-                if (!empty($check)) {
-                    // update field value
-                    $fieldValue = FieldValue::find($check->id);
-                    $fieldValue->value = $value;
-                    $fieldValue->save();
-                } else {
-                    // create field value
-                    $fieldValue = new FieldValue();
-                    $fieldValue->subscriber_id = $subscriber->id;
-                    $fieldValue->field_id = $field->id;
-                    $fieldValue->value = $value;
-                    $fieldValue->save();
-                }
+            // check if field value exists for this subscriber
+            $check = FieldValue::where('subscriber_id', $subscriber->id)
+                ->where('field_id', $field->id)->first();
+
+            if (!empty($check)) {
+                // update field value
+                $fieldValue = FieldValue::find($check->id);
+                $fieldValue->value = $value;
+                $fieldValue->save();
+            } else {
+                // create field value
+                $fieldValue = new FieldValue();
+                $fieldValue->subscriber_id = $subscriber->id;
+                $fieldValue->field_id = $field->id;
+                $fieldValue->value = $value;
+                $fieldValue->save();
+            }
         }
 
         return response()->json(['success' => true, 'message' => 'Subscriber updated successfully']);

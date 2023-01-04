@@ -17,7 +17,7 @@ class FieldController extends Controller
     public function delete($id): JsonResponse
     {
         // delete all field values for this field
-        FieldValue::where('field_id',$id)->delete();
+        FieldValue::where('field_id', $id)->delete();
 
         // delete the field
         $field = Field::find($id);
@@ -40,6 +40,4 @@ class FieldController extends Controller
 
         return response()->json(['success' => true, 'message' => 'Field created successfully']);
     }
-
-    
 }
