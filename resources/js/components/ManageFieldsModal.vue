@@ -2,8 +2,8 @@
   <b-modal id="bv-modal-manage-fields" hide-footer>
     <template #modal-title><b>Manage Fields</b></template>
 
-      <div v-if="add_field">
-         <form>
+    <div v-if="add_field">
+      <form>
         <div class="form-group pb-2">
           <label>Title</label>
           <input
@@ -12,19 +12,21 @@
             class="form-control mt-2" />
         </div>
         <div class="form-group pb-2">
-
-      <label>Type</label>
-      <select v-model="new_field.type" class="form-control my-2">
-      <option v-for="(option, index) in options" :value="option" :key="index">
-        {{ option }}
-      </option>
-    </select>
-
+          <label>Type</label>
+          <select v-model="new_field.type" class="form-control my-2">
+            <option
+              v-for="(option, index) in options"
+              :value="option"
+              :key="index">
+              {{ option }}
+            </option>
+          </select>
         </div>
         <div v-if="saving_field" class="text-center">
-        <b-spinner label="Loading..."></b-spinner>
-      </div>
-        <button v-else
+          <b-spinner label="Loading..."></b-spinner>
+        </div>
+        <button
+          v-else
           type="button"
           class="btn btn-success w-100 mt-2"
           @click="saveField()">
@@ -32,7 +34,7 @@
         </button>
       </form>
 
-        <div class="text-center mt-2">
+      <div class="text-center mt-2">
         <button
           type="button"
           class="btn btn-danger btn-sm"
@@ -40,11 +42,9 @@
           Cancel
         </button>
       </div>
-
-      </div>
+    </div>
 
     <div v-else>
-
       <div class="text-center mb-2">
         <button
           type="button"
@@ -54,11 +54,11 @@
         </button>
       </div>
 
-    <div v-if="fields.length === 0" class="p-2 text-center">
-      No fields found
-    </div>
+      <div v-if="fields.length === 0" class="p-2 text-center">
+        No fields found
+      </div>
 
-    <table class="table table-hover mb-0" v-else>
+      <table class="table table-hover mb-0" v-else>
         <thead>
           <tr>
             <th scope="col">Title</th>
@@ -69,40 +69,38 @@
         <tbody>
           <tr v-for="(field, index) in fields" :key="index">
             <td>{{ field.title }}</td>
-            <td><span :class="'badge badge-pill'">{{field.type}}</span></td>
             <td>
-                <button
-                  type="button"
-                  class="btn btn-danger btn-sm"
-                  title="Delete field"
-                  @click="deleteField(`${field.id}`)">
-                  <i class="fas fa-trash"></i>
-                </button>
+              <span :class="'badge badge-pill'">{{ field.type }}</span>
+            </td>
+            <td>
+              <button
+                type="button"
+                class="btn btn-danger btn-sm"
+                title="Delete field"
+                @click="deleteField(`${field.id}`)">
+                <i class="fas fa-trash"></i>
+              </button>
             </td>
           </tr>
         </tbody>
       </table>
-
-      </div>
-
+    </div>
   </b-modal>
 </template>
 
 <script>
 export default {
-
   data() {
     return {
       fields: [],
       add_field: false,
       new_field: {},
       saving_field: false,
-      options: [ 'date', 'number', 'string', 'boolean']
+      options: ["date", "number", "string", "boolean"],
     };
   },
 
   methods: {
-
     showAddField() {
       this.new_field = {};
       this.add_field = true;
@@ -110,7 +108,7 @@ export default {
 
     getFields() {
       axios
-        .get('/fields/get')
+        .get("/fields/get")
         .then((response) => {
           this.fields = response.data;
         })
@@ -125,19 +123,15 @@ export default {
     },
 
     saveField() {
-
       if (!this.new_field.title) {
         this.customAlert("Please enter field title");
       } else if (!this.new_field.type) {
         this.customAlert("Please select field type");
-      }
-
-      else {
-
+      } else {
         this.saving_field = true;
 
         axios
-          .post("/fields/new", { field: this.new_field})
+          .post("/fields/new", { field: this.new_field })
           .then((response) => {
             console.log(response.data);
             this.getFields();
@@ -149,9 +143,7 @@ export default {
             this.loading = false;
             this.saving_field = false;
           });
-
       }
-
     },
 
     customAlert(text) {
@@ -169,7 +161,7 @@ export default {
     },
 
     deleteField(field_id) {
-        axios
+      axios
         .delete(`/fields/delete/${field_id}`)
         .then((response) => {
           console.log(response.data);
@@ -180,15 +172,16 @@ export default {
           this.loading = false;
         });
     },
-
   },
 };
 </script>
 
 <style scoped>
-.badge {font-weight: normal;
-text-transform: uppercase;
-background-color: rgb(0, 0, 0);
-letter-spacing: 0.1em;
-font-size: 0.75em;}
+.badge {
+  font-weight: normal;
+  text-transform: uppercase;
+  background-color: rgb(0, 0, 0);
+  letter-spacing: 0.1em;
+  font-size: 0.75em;
+}
 </style>

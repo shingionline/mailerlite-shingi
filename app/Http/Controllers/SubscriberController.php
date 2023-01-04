@@ -22,8 +22,7 @@ class SubscriberController extends Controller
         foreach ($fields as $field) {
 
             // check if field value exists for this subscriber
-            $check = FieldValue::where('subscriber_id', $subscriber->id)
-                ->where('field_id', $field->id)->first();
+            $check = FieldValue::where('subscriber_id', $subscriber->id)->where('field_id', $field->id)->first();
 
             $value = (!empty($check)) ? $check->value : null;
             $fieldValueId = (!empty($check)) ? $check->id : null;
@@ -60,6 +59,17 @@ class SubscriberController extends Controller
         $name = $data['subscriber']['name'];
         $custom_fields = $data['custom_fields'];
 
+        // validate email
+        if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+            return response()->json(['success' => false, 'message' => 'Invalid email address']);
+        }
+
+        // check if subscriber already exists
+        $check = Subscriber::where('email', $email)->first();
+        if (!empty($check)) {
+            return response()->json(['success' => false, 'message' => 'Subscriber email already exists']);
+        }
+
         // save subscriber
         $subscriber = new Subscriber();
         $subscriber->email = $email;
@@ -69,8 +79,22 @@ class SubscriberController extends Controller
         // save custom fields
         foreach ($custom_fields as $title => $value) {
 
-            // get field id
+            // get field info
             $field = Field::where('title', $title)->first();
+
+            // get field type
+            $type = $field->type;
+
+            // validate field value - date, number, boolean
+            if (!empty($value)) {
+                if ($type == 'date' && !strtotime($value)) {
+                    return response()->json(['success' => false, 'message' => 'Invalid date format for ' . $title]);
+                } else if ($type == 'number' && !is_numeric($value)) {
+                    return response()->json(['success' => false, 'message' => 'Invalid number format for ' . $title]);
+                } else if ($type == 'boolean' && !is_bool($value)) {
+                    return response()->json(['success' => false, 'message' => 'Invalid boolean format for ' . $title]);
+                }
+            }
 
             $fieldValue = new FieldValue();
             $fieldValue->subscriber_id = $subscriber->id;
@@ -92,6 +116,11 @@ class SubscriberController extends Controller
         $state = $data['subscriber']['state'];
         $custom_fields = $data['custom_fields'];
 
+        // validate email
+        if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+            return response()->json(['success' => false, 'message' => 'Invalid email address']);
+        }
+
         // update subscriber
         $subscriber = Subscriber::find($id);
         $subscriber->email = $email;
@@ -107,6 +136,20 @@ class SubscriberController extends Controller
 
             // get field id
             $field = Field::where('title', $title)->first();
+
+            // get field type
+            $type = $field->type;
+
+            // validate field value - date, number, boolean
+            if (!empty($value)) {
+                if ($type == 'date' && !strtotime($value)) {
+                    return response()->json(['success' => false, 'message' => 'Invalid date format for ' . $title]);
+                } else if ($type == 'number' && !is_numeric($value)) {
+                    return response()->json(['success' => false, 'message' => 'Invalid number format for ' . $title]);
+                } else if ($type == 'boolean' && !is_bool($value)) {
+                    return response()->json(['success' => false, 'message' => 'Invalid boolean format for ' . $title]);
+                }
+            }
 
             // check if field value exists for this subscriber
             $check = FieldValue::where('subscriber_id', $subscriber->id)

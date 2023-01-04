@@ -40,29 +40,32 @@
           <tr v-for="(subscriber, index) in subscribers" :key="index">
             <td>{{ subscriber.email }}</td>
             <td>{{ subscriber.name }}</td>
-            <td><span :class="'badge badge-pill '+subscriber.state">{{subscriber.state}}</span></td>
+            <td>
+              <span :class="'badge badge-pill ' + subscriber.state">{{
+                subscriber.state
+              }}</span>
+            </td>
 
             <td class="nowrap">
               <button
                 type="button"
                 class="btn btn-primary"
                 title="View subscriber"
-                @click="showModal('view-subscriber', `${subscriber.id}`, `${subscriber.name}`)">
+                @click="showModal('view-subscriber',`${subscriber.id}`,`${subscriber.name}`)">
                 <i class="fas fa-eye"></i>
               </button>
               <button
                 type="button"
                 class="btn btn-success"
                 title="Edit subscriber"
-                @click="showModal('edit-subscriber', `${subscriber.id}`, `${subscriber.name}`)">
+                @click="showModal('edit-subscriber',`${subscriber.id}`,`${subscriber.name}`)">
                 <i class="fas fa-edit"></i>
               </button>
               <button
                 type="button"
                 class="btn btn-danger"
                 title="Delete subscriber"
-                @click="
-                  showModal('delete-subscriber',`${subscriber.id}`,`${subscriber.name}`)">
+                @click="showModal('delete-subscriber',`${subscriber.id}`,`${subscriber.name}`)">
                 <i class="fas fa-trash"></i>
               </button>
             </td>
@@ -93,7 +96,6 @@
     <Delete-subscriber-modal
       :selected_subscriber="selected_subscriber"
       @update-subscribers="getSubscribers"></Delete-subscriber-modal>
-
   </div>
 </template>
 
@@ -129,8 +131,8 @@ export default {
     },
 
     showModal(name, subscriber_id, subscriber_name) {
-
-      this.selected_subscriber = '{"id":' + subscriber_id + ', "name":"' + subscriber_name + '"}';
+      this.selected_subscriber =
+        '{"id":' + subscriber_id + ', "name":"' + subscriber_name + '"}';
 
       if (name === "view-subscriber") {
         this.$refs.viewSubscriber.getSubscriber(subscriber_id);
@@ -156,18 +158,40 @@ export default {
 </script>
 
 <style scoped>
-h3 { font-family: 'Lexend Deca', sans-serif; font-size: 2rem !important;}
-h3, small { color: #fff; }
-small { font-style: italic; }
-.nowrap { white-space: nowrap; }
-.badge { background-color: #fff; 
-font-weight: normal;
-text-transform: uppercase;
-letter-spacing: 0.1em;
-font-size: 0.75em;}
-.active { background-color: rgb(26, 90, 30);}
-.unsubscribed { background-color: rgb(124, 33, 129);}
-.junk { background-color: rgb(0, 0, 0);}
-.bounced { background-color: rgb(154, 37, 37);}
-.unconfirmed { background-color: rgb(80, 80, 80);}
+h3 {
+  font-family: "Lexend Deca", sans-serif;
+  font-size: 2rem !important;
+}
+h3,
+small {
+  color: #fff;
+}
+small {
+  font-style: italic;
+}
+.nowrap {
+  white-space: nowrap;
+}
+.badge {
+  background-color: #fff;
+  font-weight: normal;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  font-size: 0.75em;
+}
+.active {
+  background-color: rgb(26, 90, 30);
+}
+.unsubscribed {
+  background-color: rgb(124, 33, 129);
+}
+.junk {
+  background-color: rgb(0, 0, 0);
+}
+.bounced {
+  background-color: rgb(154, 37, 37);
+}
+.unconfirmed {
+  background-color: rgb(80, 80, 80);
+}
 </style>

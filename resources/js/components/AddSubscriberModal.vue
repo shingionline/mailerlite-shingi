@@ -15,20 +15,25 @@
           <input
             v-model="new_subscriber.name"
             type="text"
-            class="form-control my-2" />
+            class="form-control my-2"
+          />
         </div>
 
         <div v-for="(data, index) in fields" :key="index">
-            <div class="form-group pb-2">
-              <label>{{data.title}}</label>
-              <input v-model="custom_fields[data.title]" :type="data.type" class="form-control mt-2" />
-            </div>
+          <div class="form-group pb-2">
+            <label>{{ data.title }}</label>
+            <input
+              v-model="custom_fields[data.title]"
+              :type="data.type"
+              class="form-control mt-2" />
           </div>
+        </div>
 
         <div v-if="saving_subscriber" class="text-center">
-        <b-spinner label="Loading..."></b-spinner>
-      </div>
-        <button v-else
+          <b-spinner label="Loading..."></b-spinner>
+        </div>
+        <button
+          v-else
           type="button"
           class="btn btn-success w-100 mt-2"
           @click="saveSubscriber()">
@@ -72,21 +77,24 @@ export default {
         this.customAlert("Please enter subscriber email");
       } else if (!this.new_subscriber.name) {
         this.customAlert("Please enter subscriber name");
-      }
-
-      else {
-
+      } else {
         this.saving_subscriber = true;
 
         axios
           .post("/subscribers/new", {
             subscriber: this.new_subscriber,
-            custom_fields: this.custom_fields
+            custom_fields: this.custom_fields,
           })
           .then((response) => {
             console.log(response.data);
-            this.$bvModal.hide("bv-modal-add-subscriber");
-            this.$emit("update-subscribers");
+
+            if (response.data.success) {
+              this.$bvModal.hide("bv-modal-add-subscriber");
+              this.$emit("update-subscribers");
+            } else {
+              this.customAlert(response.data.message);
+            }
+
             this.saving_subscriber = false;
           })
           .catch(function (err) {
@@ -94,8 +102,7 @@ export default {
             this.loading = false;
             this.saving_subscriber = false;
           });
-        }
-
+      }
     },
 
     customAlert(text) {

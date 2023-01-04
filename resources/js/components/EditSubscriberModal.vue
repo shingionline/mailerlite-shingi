@@ -5,34 +5,48 @@
       <form>
         <div class="form-group pb-2">
           <label>Email</label>
-          <input v-model="subscriber.email" type="text" class="form-control mt-2" />
+          <input
+            v-model="subscriber.email"
+            type="text"
+            class="form-control mt-2" />
         </div>
         <div class="form-group pb-2">
           <label>Name</label>
-          <input v-model="subscriber.name" type="text" class="form-control mt-2" />
+          <input
+            v-model="subscriber.name"
+            type="text"
+            class="form-control mt-2"
+          />
         </div>
 
         <div class="form-group pb-2">
           <label>State</label>
           <select v-model="subscriber.state" class="form-control my-2">
-          <option v-for="(option, index) in options" :value="option" :key="index">
-            {{ option }}
-          </option>
-        </select>
+            <option
+              v-for="(option, index) in options"
+              :value="option"
+              :key="index">
+              {{ option }}
+            </option>
+          </select>
         </div>
 
-          <div v-for="(data, index) in subscriber.field_values" :key="index">
-            <div class="form-group pb-2">
-              <label>{{data.field.title}}</label>
-              <input v-model="custom_fields[index].value" :type="data.field.type" class="form-control mt-2" />
-            </div>
+        <div v-for="(data, index) in subscriber.field_values" :key="index">
+          <div class="form-group pb-2">
+            <label>{{ data.field.title }}</label>
+            <input
+              v-model="custom_fields[index].value"
+              :type="data.field.type"
+              class="form-control mt-2" />
           </div>
+        </div>
 
         <div v-if="saving_subscriber" class="text-center">
-        <b-spinner label="Loading..."></b-spinner>
+          <b-spinner label="Loading..."></b-spinner>
         </div>
 
-        <button v-else
+        <button
+          v-else
           type="button"
           class="btn btn-success w-100 mt-2"
           @click="editSubscriber()">
@@ -52,7 +66,7 @@ export default {
       subscriber: {},
       custom_fields: {},
       saving_subscriber: false,
-      options: [ 'active', 'unsubscribed', 'junk', 'bounced', 'unconfirmed' ]
+      options: ["active", "unsubscribed", "junk", "bounced", "unconfirmed"],
     };
   },
 
@@ -80,33 +94,35 @@ export default {
         this.customAlert("Please enter subscriber name");
       } else if (!this.subscriber.state) {
         this.customAlert("Please enter subscriber state");
-      }
+      } else {
+        this.saving_subscriber = true;
 
-      else {
+        axios
+          .post("/subscribers/update", {
+            subscriber: this.subscriber,
+            custom_fields: this.custom_fields,
+          })
+          .then((response) => {
+            console.log(response.data);
 
-          this.saving_subscriber = true;
-
-          axios
-            .post("/subscribers/update", {
-              subscriber: this.subscriber,
-              custom_fields: this.custom_fields
-            })
-            .then((response) => {
-              console.log(response.data);
+            if (response.data.success) {
               this.$emit("update-subscribers");
               this.$bvModal.hide("bv-modal-edit-subscriber");
-              this.saving_subscriber = false;
-            })
-            .catch(function (err) {
-              console.log(err);
-              this.loading = false;
-              this.saving_subscriber = false;
-            });
+            } else {
+              this.customAlert(response.data.message);
+            }
 
+            this.saving_subscriber = false;
+          })
+          .catch(function (err) {
+            console.log(err);
+            this.loading = false;
+            this.saving_subscriber = false;
+          });
       }
     },
 
-     customAlert(text) {
+    customAlert(text) {
       Swal.fire({
         title: text,
         showConfirmButton: false,
@@ -119,7 +135,6 @@ export default {
         },
       });
     },
-
   },
 };
 </script>
