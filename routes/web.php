@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\SiteController;
+use App\Http\Controllers\FieldController;
 use App\Http\Controllers\ContactController;
 use App\Http\Controllers\SubscriberController;
 
@@ -26,9 +27,8 @@ Route::prefix('/subscribers')->group(function () {
     Route::delete('/delete/{id}', [SubscriberController::class, 'delete']);
 });
 
-Route::prefix('/contacts')->group(function () {
-    Route::get('/get/{id}', [ContactController::class, 'get']);
-    Route::post('/make-primary', [ContactController::class, 'make_primary']);
-    Route::post('/new', [ContactController::class, 'new']);
-    Route::delete('/delete/{id}', [ContactController::class, 'delete']);
+Route::prefix('/fields')->group(function () {
+    Route::get('/get', [FieldController::class, 'get_all']);
+    Route::delete('/delete/{id}', [FieldController::class, 'delete']);
+    Route::post('/new', [FieldController::class, 'new']);
 });

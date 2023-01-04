@@ -1,5 +1,5 @@
 @extends('layouts.app')
 
 @section('content')
-<shipping-component></shipping-component>
+<subscriber-component></subscriber-component>
 @endsection
