@@ -180,7 +180,7 @@ class SubscriberController extends Controller
         $subscriber->delete();
 
         // delete all field values for this subscriber
-        $subscriber->field_values()->delete();
+        FieldValue::where('subscriber_id', $id)->delete();
 
         return response()->json(['success' => true, 'message' => 'Subscriber deleted successfully']);
     }
