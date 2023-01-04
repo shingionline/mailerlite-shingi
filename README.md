@@ -1,3 +1,7 @@
+## YouTube video
+
+<a href="https://www.youtube.com/watch?v=CCZI8mWxy-0" target="_blank">Click here to see demo</a>
+
 ## Installation instructions
 
 - git clone https://github.com/shingionline/mailerlite-shingi.git
