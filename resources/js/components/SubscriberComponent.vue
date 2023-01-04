@@ -74,7 +74,7 @@
       </table>
     </div>
     <div class="row text-end my-3">
-      <small class="font-italic">MailerLite assessment by Shingi Mushipe</small>
+      <small class="font-italic">MailerLite assignment by Shingi Mushipe</small>
     </div>
 
     <!-- Modal components -->
